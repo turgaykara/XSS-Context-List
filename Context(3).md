@@ -2,7 +2,10 @@
 <br>
 
 <h2>🔹 17. JavaScript Object Context (JSON gibi)</h2>
-<h4>Input bir JSON içeriği içinde döner ama frontend JS bu veriyi parse edip kullanırsa, XSS olur.</h4><br>
+<h4>Input, JSON string içinde gömülür ama frontend tarafı JS olarak parse edip kullanıyorsa,<br>
+input içindeki kaçış karakterleri doğru işlenmezse JS kodu enjeksiyonu olur.
+
+</h4><br>
 
 📌 Örnek:  
 `{"name":"PAYLOAD"}`  
@@ -15,8 +18,10 @@
 
 
 
-<h2>🔹 18. JavaScript URI inside <form> / <object> / <embed></h2>
-<h4>Form Action veya Embed src attribute’larında javascript veya data URI kullanımı</h4><br>
+<h2>🔹 18. JavaScript URI inside - form / object / embed</h2>
+<h4>form action, object data veya embed src attribute’larına javascript:<br>
+veya data URI konursa, input kontrolsüzse XSS oluşabilir.
+</h4><br>
 
 📌 Örnek:  
 `<form action="javascript:alert(1)">`  
@@ -33,7 +38,8 @@ javascript:alert(1)
 
 
 <h2>🔹 19. Base64 / Data URI Context</h2>
-<h4>Bazı yerlerde data: URL ile XSS yapılabilir.</h4><br>
+<h4>Bazı yerlerde data: URI’leriyle (örneğin iframe src="data:text/html,...") XSS yapılabilir.<br>
+Input bu URI içine konulursa ve sanitize edilmezse JS kodu çalışır.</h4><br>
 
 📌 Örnek:  
 `<iframe src="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="></iframe>`  
@@ -51,7 +57,8 @@ data:text/html,<script>alert(1)</script>
 
 
 <h2>🔹 20. XHR / Fetch Injection via DOM Sinks</h2>
-<h4>JS içindeki fetch(), XMLHttpRequest(), document.write(), eval() gibi API'ler üzerinden input kullanılıyorsa DOM XSS riski vardır.</h4><br>
+<h4>JavaScript’in fetch(), XMLHttpRequest(), eval() gibi fonksiyonlarına input doğrudan veriliyorsa,<br>
+kötü amaçlı inputla XSS tetiklenebilir. Özellikle eval() çok tehlikelidir.</h4><br>
 
 📌 Örnek:  
 `eval(location.hash.substring(1))`
@@ -65,7 +72,8 @@ http://site.com/#alert(1)
 
 
 <h2>🔹 21. WebSocket / PostMessage / Custom Protocol Context</h2>
-<h4>Az bilinir ama bazı uygulamalar postMessage, websocket içeriği olarak input’u alır ve DOM’a yansıtırsa yine XSS doğar.</h4><br>
+<h4>WebSocket veya postMessage gibi API’ler ile client’a veri yansıtılıyorsa ve bu veriler<br>
+DOM’a yazılıyorsa, kontrolsüz inputla XSS çıkabilir.</h4><br>
 
 📌 Örnek:  
 ```js
@@ -84,8 +92,10 @@ window.addEventListener("message", e => {
 
 
 <h2>🔹 22. Script src dynamically built</h2>
-<h4>JavaScript ile dinamik olarak oluşturulan script tag’larının src attribute’u kullanıcı girdisi<br>
-ile inşa edilirse, zararlı kaynaklar yüklenebilir veya kod enjeksiyonu yapılabilir.</h4>
+<h4>JavaScript kodunda script tag’i oluşturulup src attribute’u dinamik olarak inputla set ediliyorsa,<br>
+input doğru kontrol edilmezse, dışardan kötü amaçlı script çağrısı yapılabilir.
+
+</h4>
   <br>
 
 📌 Örnek:  
@@ -105,7 +115,8 @@ document.body.appendChild(script);
 
 
 <h2>🔹 23. SetTimeout / setInterval / Function constructor</h2>
-<h4>setTimeout(), setInterval(), Function() gibi fonksiyonlara kullanıcı girdisi doğrudan kod olarak verilirse, XSS oluşur.</h4><br>
+<h4>Input, setTimeout/setInterval veya Function constructor parametresi olarak kullanılırsa,<br>
+doğrudan JS kodu olarak çalıştırılabilir ve XSS olabilir.</h4><br>
 
 📌 Örnek:  
 `setTimeout(userInput, 1000)`  
