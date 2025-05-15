@@ -2,7 +2,8 @@
 <br>
 
 <h2>🔹 9. SVG / XML Context</h2>
-<h4>SVG veya XML içeriğinde çalıştırma.</h4><br>
+<h4>Input SVG veya XML içeriği içinde kullanılır. SVG elementlerinin event handler’ları (ör: circle onload=...)<br>
+sayesinde XSS mümkündür. Input kontrol edilmezse buradan da XSS çıkar.</h4><br>
 
 📌 Örnek:  
 `<svg><circle onload="alert(1)"/></svg>`  
@@ -16,7 +17,8 @@
 
 
 <h2>🔹 10. Meta Tag Context</h2>
-<h4>HTML içindeki `meta` etiketiyle manipulasyon.</h4><br>
+<h4>Input meta tag’ının attribute’larına gömülür, özellikle http-equiv="refresh" ile sayfa otomatik yönlendirilirken<br>
+content attribute’u içine javascript: URI yerleştirilebilir. Böylece sayfa JS koduyla yönlendirilip XSS olur.</h4><br>
 
 📌 Örnek:  
 `<meta http-equiv="refresh" content="0;url=PAYLOAD">`  
@@ -30,7 +32,10 @@ javascript:alert(1)"
 
 
 <h2>🔹 11. Base Href Context</h2>
-<h4>Eğer base href="..." elementi kontrol ediliyorsa.</h4><br>
+<h4>Sayfada (base href="...") varsa, ve bu değer kontrolsüzse, base URL olarak javascript: URI<br>
+verilip tüm sayfadaki göreceli URL’ler JS kodu çalıştıracak şekilde değiştirilebilir.
+
+</h4><br>
 
 📌 Örnek:  
 ```
@@ -48,7 +53,8 @@ javascript:alert(1)"
 
 
 <h2>🔹 12. Template Injection Context</h2>
-<h4>Client-side templating sistemlerinde: Mustache, Handlebars, AngularJS, VueJS.</h4><br>
+<h4>Client-side template motorlarında (Mustache, Handlebars, AngularJS, VueJS) input, template ifadesi olarak gömülür.<br>
+Burada ham expression’lar (ör. {{constructor.constructor("alert(1)")()}}) ile XSS yapılabilir.</h4><br>
 
 📌 Örnek:  
 ```html
@@ -67,7 +73,8 @@ javascript:alert(1)"
 
 
 <h2>🔹 13. Markdown / BBCode Context</h2>
-<h4>Input markdown olarak parse edilip HTML'ye dönüşür.</h4><br>
+<h4>Input Markdown veya BBCode olarak işleniyor, sonrasında HTML’ye dönüştürülüyorsa, <br>
+özellikle javascript: URI içeren linkler veya resimler XSS açığı oluşturabilir.</h4><br>
 
 📌 Örnek:  
 `[click](javascript:alert(1))`  
@@ -81,7 +88,8 @@ javascript:alert(1)"
 
 
 <h2>🔹 14. Iframe Srcdoc Context</h2>
-<h4>HTML içeriği iframe içine srcdoc olarak yazılır.</h4><br>
+<h4>Input iframe’in srcdoc attribute’una doğrudan yerleştiriliyorsa, buraya kötü amaçlı<br>
+script kodları konabilir. Eğer sandbox parametresi izin verirse bu XSS’e dönüşür.</h4><br>
 
 📌 Örnek:  
 ```document.body.innerHTML = `<iframe srcdoc="${userInput}">`;```  
@@ -98,7 +106,10 @@ srcdoc payload’larında sandbox="allow-scripts" olmazsa script çalışmaz.
 
 
 <h2>🔹 15. Sandboxed Context (Controlled via CSP / Sandbox attr)</h2>
-<h4>iframe[sandbox], CSP gibi güvenlik kontrollerinin yanlış yapılandırılması sonucu ortaya çıkar.</h4><br>
+<h4>iframe sandbox attribute’u belirli kısıtlamalar getirir. Yanlış konfigüre edilirse,<br>
+örneğin allow-scripts ile script çalışmasına izin veriliyorsa, buradan XSS yapılabilir.
+
+</h4><br>
 
 📌 Örnek:  
 `<iframe sandbox="allow-scripts" srcdoc="PAYLOAD"></iframe>`  
@@ -113,7 +124,8 @@ srcdoc payload’larında sandbox="allow-scripts" olmazsa script çalışmaz.
 
 
 <h2>🔹 16. HTTP Header Context</h2>
-<h4>Bazı XSS'ler response header içeriğiyle tetiklenir.</h4><br>
+<h4>Bazı XSS’ler response header’ları üzerinden yapılır. Örneğin, Location header’da kontrolsüz javascript: URI<br>
+kullanılırsa, redirect ile XSS olur. Ayrıca Refresh, Referer ve CSP header’ları da hedef olabilir.</h4><br>
 
 📌 Örnek:  
 `Location: PAYLOAD`
